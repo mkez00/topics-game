@@ -1,0 +1,16 @@
+[
+  {"name":"WWE Finishing Move","category":["WRESTLING","SPORTS"]},
+  {"name":"NFL Offense Formation","category":["FOOTBALL","SPORTS"]},
+  {"name":"Christmas Carol","category":["CHRISTMAS","MUSIC"]},
+  {"name":"Fast Food Franchise","category":["FOOD","BUSINESS"]},
+  {"name":"Large Appliance Manufacturer","category":["BUSINESS"]},
+  {"name":"Type of Sofa Fabric","category":[]},
+  {"name":"Computer Operating System","category":[]},
+  {"name":"Car Tire Manufacturer","category":[]},
+  {"name":"Brand of Vodka","category":[]},
+  {"name":"Another Name for Sandwich","category":[]},
+  {"name":"90's Action Movie Hero","category":[]},
+  {"name":"Sesame Street Character","category":[]},
+  {"name":"Stock Exchange","category":[]},
+  {"name":"Hairstyle","category":[]}
+]
