@@ -27,6 +27,7 @@ class GameBoard extends Component {
     this.state = {game: game}
 
     this.fetchNextCard = this.fetchNextCard.bind(this);
+    this.calculateNextTurn = this.calculateNextTurn.bind(this);
   }
 
   fetchNextCard(){
@@ -66,21 +67,42 @@ class GameBoard extends Component {
   calculateNextTurn(){
     var game = this.state.game;
 
-    //get list of players with no cards
-    var gamePlayersNoCards = game.gamePlayers.filter((gamePlayer)=>{
-      if (gamePlayer.cardDeck.length==0){
+    //reset all turns to false
+    var lastTurnPlayer = null; //the last player to have a turn
+    var gamePlayers = game.gamePlayers.map((gamePlayer)=>{
+      if (gamePlayer.turn){
+        lastTurnPlayer = gamePlayer;
+      }
+      gamePlayer.turn=false;
+      return gamePlayer;
+    })
+
+    // if a player has no card deck, set their turn to true and be done with it
+    var turnSet = false;
+    gamePlayers = gamePlayers.filter((gamePlayer)=>{
+      if (gamePlayer.cardDeck.length==0 && !turnSet){
+        gamePlayer.turn=true;
+        turnSet = true;
+        return gamePlayer;
+      } else {
         return gamePlayer;
       }
     })
 
-    // if there are players with no cardDeck
-    if (gamePlayersNoCards.length>0){
-      //if the current turn user has no cards, return since they will go again
-      if (gamePlayersNoCards.filter((gamePlayer)=>{if (gamePlayer.turn) return gamePlayer}).length>0){
-        return this.setState({game: game});
-      }
+    // if the next turn hasn't beeen set, go to the next player
+    if (!turnSet){
+      gamePlayers = gamePlayers.filter((gamePlayer)=>{
+        if (gamePlayer.key==lastTurnPlayer.key+1){
+          turnSet=true;
+          gamePlayer.turn=true;
+        }
+        return gamePlayer
+      })
+    }
 
-      //find the next player to the "right" that has no cardDeck
+    //turn not set yet, give it to first player
+    if (!turnSet){
+      gamePlayers[0].turn=true;
     }
 
     this.setState({game: game});
@@ -116,6 +138,7 @@ class GameBoard extends Component {
           {playerBoard}
         </div>
         <div>
+          <input type="button" value="Calculate Next Turn" onClick={this.calculateNextTurn} />
           <input type="button" value="Fetch Next Card" onClick={this.fetchNextCard} />
         </div>
         <input onClick={this.props.changeGameState} data-next-state="SETUP" type="button" value="New Game" />
