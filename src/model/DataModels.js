@@ -12,6 +12,7 @@ export function Player(){
 export function Game() {
   this.gamePlayers = [];
   this.fullDeck = [];
+  this.gameTimerId = 0;
 }
 
 export function GamePlayer(){

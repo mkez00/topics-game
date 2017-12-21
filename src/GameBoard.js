@@ -29,10 +29,19 @@ class GameBoard extends Component {
     game.gamePlayers = gamePlayers;
     this.state = {game: game}
 
+    this.autoPlay = this.autoPlay.bind(this);
     this.fetchNextCard = this.fetchNextCard.bind(this);
     this.calculateNextTurn = this.calculateNextTurn.bind(this);
     this.collectCard = this.collectCard.bind(this);
     this.incrementCorrectCount = props.incrementCorrectCount.bind(this);
+  }
+
+  autoPlay(){
+    var $this = this
+    this.state.game.gameTimerId = setInterval( function(){
+      $this.calculateNextTurn()
+    },3000)
+    this.setState({game: $this.state.game});
   }
 
   fetchNextCard(){
@@ -102,6 +111,10 @@ class GameBoard extends Component {
 
   collectCard(event){
     var game = this.state.game;
+
+    // clear interval
+    clearInterval(game.gameTimerId)
+
     var faceOffList = this.getFaceOff(game.gamePlayers)
     if (faceOffList.length>0){
       var keyLoser = event.target.attributes.getNamedItem('data-key').value; //key of player losing cardDeck
@@ -126,6 +139,8 @@ class GameBoard extends Component {
 
       game.gamePlayers = gamePlayers;
       this.setState({game: game});
+
+      this.autoPlay()
     }
 
   }
@@ -184,6 +199,8 @@ class GameBoard extends Component {
     }
 
     this.setState({game: game});
+
+    this.fetchNextCard();
   }
 
   render() {
@@ -201,12 +218,12 @@ class GameBoard extends Component {
               <h2>{player.name}</h2>
               { gamePlayer.cardDeck.length>0 &&
                 <div>
-                  <input type="button" value="Collect" onClick={this.collectCard} data-key={player.key}  />
+                  <input type="button" value="Remove Card" onClick={this.collectCard} data-key={player.key}  />
                   <p>{gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].topic.name}</p>
                   <Symbol symbol={gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].symbol} />
                 </div>
               }
-              <small>{player.correct}</small>
+              <div className="Correct">{player.correct}</div>
             </div>
     })
 
@@ -217,8 +234,7 @@ class GameBoard extends Component {
           {playerBoard}
         </div>
         <div>
-          <input type="button" value="Calculate Next Turn" onClick={this.calculateNextTurn} />
-          <input type="button" value="Fetch Next Card" onClick={this.fetchNextCard} />
+          <input type="button" value="Autoplay" onClick={this.autoPlay} />
         </div>
         <input onClick={this.props.changeGameState} data-next-state="SETUP" type="button" value="New Game" />
         <input onClick={this.props.changeGameState} data-next-state="SUMMARY" type="button" value="End Game" />

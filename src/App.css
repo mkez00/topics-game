@@ -53,5 +53,10 @@ td {
 }
 
 input[type=text] {
-  width:95%;
+  width: 95%;
+}
+
+.Correct {
+  font-size: x-small;
+  text-align: right;
 }
