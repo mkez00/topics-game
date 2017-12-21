@@ -4,6 +4,9 @@ import {Game} from './model/DataModels.js';
 import {GamePlayer} from './model/DataModels.js';
 import {Card} from './model/DataModels.js';
 
+import Symbol from './Symbol.js';
+import './App.css';
+
 class GameBoard extends Component {
 
   constructor(props){
@@ -40,6 +43,11 @@ class GameBoard extends Component {
 
     // get random card from deck
     var deck = this.state.game.fullDeck;
+
+    if (deck.length==0){
+      return;
+    }
+
     var randomCard = deck[Math.floor(Math.random() * deck.length)];
 
     //remove item from deck
@@ -95,8 +103,6 @@ class GameBoard extends Component {
 
   collectCard(event){
     var game = this.state.game;
-    console.debug("collectCard")
-    console.debug(game)
     var faceOffList = this.getFaceOff(game.gamePlayers)
     if (faceOffList.length>0){
       var keyLoser = event.target.attributes.getNamedItem('data-key').value; //key of player losing cardDeck
@@ -111,14 +117,16 @@ class GameBoard extends Component {
       var gamePlayers = game.gamePlayers.map((gamePlayer)=>{
         if (gamePlayer.key==keyLoser){
           //remove top card from card deck
+          gamePlayer.cardDeck.pop()
         }
+        return gamePlayer
       })
 
       // increment correct count for player
       this.incrementCorrectCount(keyWinner)
 
-      // game.gamePlayers = gamePlayers;
-      // this.setState({game: game});
+      game.gamePlayers = gamePlayers;
+      this.setState({game: game});
     }
 
   }
@@ -190,13 +198,13 @@ class GameBoard extends Component {
         }
       })[0]
 
-      return <div key={player.key} data-key={player.key}>
+      return <div key={player.key} data-key={player.key} className="Player">
               <h2>{player.name}</h2>
               { gamePlayer.cardDeck.length>0 &&
                 <div>
                   <input type="button" value="Collect" onClick={this.collectCard} data-key={player.key}  />
                   <p>{gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].topic.name}</p>
-                  <p>{gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].symbol}</p>
+                  <Symbol symbol={gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].symbol} />
                 </div>
               }
               <small>{player.correct}</small>
