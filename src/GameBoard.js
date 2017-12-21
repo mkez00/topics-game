@@ -82,7 +82,6 @@ class GameBoard extends Component {
   getFaceOff(gamePlayers){
     var faceOff = []
     if (gamePlayers.length>0){
-      console.debug(gamePlayers)
       gamePlayers.map((gamePlayer)=>{
         if (gamePlayer.cardDeck.length>0){
           gamePlayers.map((gamePlayer2)=>{
@@ -214,7 +213,7 @@ class GameBoard extends Component {
     return (
       <div>
         <p>The Game Board</p>
-        <div>
+        <div className="GameBoard">
           {playerBoard}
         </div>
         <div>

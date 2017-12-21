@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import './App.css';
+
 class GameSummary extends Component {
 
   constructor(props){
@@ -7,7 +9,6 @@ class GameSummary extends Component {
   }
 
   render() {
-
     var players = this.props.players;
     var playerRows = players.map((player)=>{
       return <tr key={player.key}>
@@ -19,7 +20,7 @@ class GameSummary extends Component {
     return (
       <div>
         <p>The Game Summary table</p>
-        <table>
+        <table className="Table">
           <thead>
             <tr>
               <th>Name</th>
