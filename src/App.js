@@ -54,8 +54,7 @@ class App extends Component {
     this.setState({gameModel: gameModel});
   }
 
-  incrementCorrectCount(event) {
-    var key = event.target.attributes.getNamedItem('data-key').value;
+  incrementCorrectCount(key) {
     var gameModel = this.state.gameModel;
     var players = gameModel.players.map((player)=>{
       if (player.key!=key) return player;

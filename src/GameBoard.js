@@ -28,10 +28,15 @@ class GameBoard extends Component {
 
     this.fetchNextCard = this.fetchNextCard.bind(this);
     this.calculateNextTurn = this.calculateNextTurn.bind(this);
+    this.collectCard = this.collectCard.bind(this);
+    this.incrementCorrectCount = props.incrementCorrectCount.bind(this);
   }
 
   fetchNextCard(){
     var game = this.state.game;
+    if (this.faceOffPending(game.gamePlayers)){
+      return;
+    }
 
     // get random card from deck
     var deck = this.state.game.fullDeck;
@@ -64,8 +69,74 @@ class GameBoard extends Component {
     this.setState({game: game});
   }
 
+  // When two players have the same symbol aligned, they are now facing off with one another,
+  // return of empty array indicates no face off this turn
+  getFaceOff(gamePlayers){
+    var faceOff = []
+    if (gamePlayers.length>0){
+      console.debug(gamePlayers)
+      gamePlayers.map((gamePlayer)=>{
+        if (gamePlayer.cardDeck.length>0){
+          gamePlayers.map((gamePlayer2)=>{
+            if (gamePlayer2.cardDeck.length>0){
+              // only care about top card in players decks
+              if (gamePlayer.key!=gamePlayer2.key &&
+                  gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].symbol==gamePlayer2.cardDeck[gamePlayer2.cardDeck.length-1].symbol){
+                faceOff.push(gamePlayer);
+                faceOff.push(gamePlayer2);
+              }
+            }
+          })
+        }
+      })
+    }
+    return faceOff;
+  }
+
+  collectCard(event){
+    var game = this.state.game;
+    console.debug("collectCard")
+    console.debug(game)
+    var faceOffList = this.getFaceOff(game.gamePlayers)
+    if (faceOffList.length>0){
+      var keyLoser = event.target.attributes.getNamedItem('data-key').value; //key of player losing cardDeck
+      var keyWinner = null
+      faceOffList.map((gamePlayer)=>{
+        if (gamePlayer.key!=keyLoser){
+          keyWinner = gamePlayer.key
+        }
+      })
+
+      //remove top card from card deck of loser
+      var gamePlayers = game.gamePlayers.map((gamePlayer)=>{
+        if (gamePlayer.key==keyLoser){
+          //remove top card from card deck
+        }
+      })
+
+      // increment correct count for player
+      this.incrementCorrectCount(keyWinner)
+
+      // game.gamePlayers = gamePlayers;
+      // this.setState({game: game});
+    }
+
+  }
+
+  faceOffPending(gamePlayers){
+    if (this.getFaceOff(gamePlayers).length>0){
+      return true
+    } else {
+      return false
+    }
+  }
+
   calculateNextTurn(){
     var game = this.state.game;
+
+    if (this.faceOffPending(game.gamePlayers)){
+      return;
+    }
 
     //reset all turns to false
     var lastTurnPlayer = null; //the last player to have a turn
@@ -119,10 +190,11 @@ class GameBoard extends Component {
         }
       })[0]
 
-      return <div key={player.key} data-key={player.key} onClick={this.props.incrementCorrectCount}>
+      return <div key={player.key} data-key={player.key}>
               <h2>{player.name}</h2>
               { gamePlayer.cardDeck.length>0 &&
                 <div>
+                  <input type="button" value="Collect" onClick={this.collectCard} data-key={player.key}  />
                   <p>{gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].topic.name}</p>
                   <p>{gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].symbol}</p>
                 </div>
