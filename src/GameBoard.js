@@ -34,6 +34,11 @@ class GameBoard extends Component {
     this.calculateNextTurn = this.calculateNextTurn.bind(this);
     this.collectCard = this.collectCard.bind(this);
     this.incrementCorrectCount = props.incrementCorrectCount.bind(this);
+    this.pauseGame = this.pauseGame.bind(this);
+  }
+
+  componentDidMount(){
+    this.autoPlay()
   }
 
   autoPlay(){
@@ -41,7 +46,14 @@ class GameBoard extends Component {
     this.state.game.gameTimerId = setInterval( function(){
       $this.calculateNextTurn()
     },3000)
+    this.state.game.paused=false
     this.setState({game: $this.state.game});
+  }
+
+  pauseGame(){
+    clearInterval(this.state.game.gameTimerId)
+    this.state.game.paused=true
+    this.setState({game: this.state.game})
   }
 
   fetchNextCard(){
@@ -76,7 +88,7 @@ class GameBoard extends Component {
       //setup card for players deck
       var card = new Card();
       card.topic = randomCard;
-      card.symbol = Math.floor(Math.random() * 4);
+      card.symbol = Math.floor(Math.random() * game.gamePlayers.length+2);
 
       newDeck.push(card);
       return {...gamePlayer, cardDeck: newDeck};
@@ -112,8 +124,7 @@ class GameBoard extends Component {
   collectCard(event){
     var game = this.state.game;
 
-    // clear interval
-    clearInterval(game.gameTimerId)
+    this.pauseGame()
 
     var faceOffList = this.getFaceOff(game.gamePlayers)
     if (faceOffList.length>0){
@@ -214,30 +225,44 @@ class GameBoard extends Component {
         }
       })[0]
 
-      return <div key={player.key} data-key={player.key} className="Player">
-              <h2>{player.name}</h2>
-              { gamePlayer.cardDeck.length>0 &&
-                <div>
-                  <input type="button" value="Remove Card" onClick={this.collectCard} data-key={player.key}  />
-                  <p>{gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].topic.name}</p>
-                  <Symbol symbol={gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].symbol} />
-                </div>
-              }
-              <div className="Correct">{player.correct}</div>
+      var playerClasses = "Player"
+      if (gamePlayer.cardDeck.length==0){
+        playerClasses = playerClasses + " NoCards"
+      } else if (gamePlayer.cardDeck.length==1) {
+        playerClasses = playerClasses + " OneCard"
+      } else {
+        playerClasses = playerClasses + " MultiCard"
+      }
+
+
+      return <div key={player.key} data-key={player.key} className={playerClasses}>
+                  <div><h2>{player.name}</h2></div>
+                  <div className="CardContainer">
+                  { gamePlayer.cardDeck.length>0 &&
+                    <div>
+                      <input className="button button-small" type="button" value="Remove Card" onClick={this.collectCard} data-key={player.key}  />
+                      <Symbol symbol={gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].symbol} />
+                      <div><p>{gamePlayer.cardDeck[gamePlayer.cardDeck.length-1].topic.name}</p></div>
+                    </div>
+                  }
+                  </div>
+                  <div className="Correct">{player.correct}</div>
             </div>
     })
 
     return (
       <div>
-        <p>The Game Board</p>
         <div className="GameBoard">
           {playerBoard}
         </div>
-        <div>
-          <input type="button" value="Autoplay" onClick={this.autoPlay} />
+        <div className="GameBoardButtons">
+        { !this.state.game.paused &&
+          <input className="button" onClick={this.pauseGame} type="button" value="Pause" />
+        }
+        { this.state.game.paused &&
+          <input className="button" onClick={this.autoPlay} type="button" value="Resume" />
+        }
         </div>
-        <input onClick={this.props.changeGameState} data-next-state="SETUP" type="button" value="New Game" />
-        <input onClick={this.props.changeGameState} data-next-state="SUMMARY" type="button" value="End Game" />
       </div>
     );
   }

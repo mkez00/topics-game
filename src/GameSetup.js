@@ -13,7 +13,7 @@ class GameSetup extends Component {
   render() {
     return (
       <div>
-        <p>The Game Setup form</p>
+        <h3>Game Setup</h3>
         <table className="Table">
           <thead>
             <tr>
@@ -29,8 +29,17 @@ class GameSetup extends Component {
                                                 deletePlayerHandler={this.props.deletePlayerHandler} />)}
           </tbody>
         </table>
-        <button onClick={this.props.addPlayerHandler}>Add Player</button>
-        <input onClick={this.props.changeGameState} data-next-state="GAME" type="button" value="Start Game" />
+        <div className="BottomButtons">
+        {this.props.players.length<6 &&
+        <button className="button" onClick={this.props.addPlayerHandler}>Add Player</button>
+        }
+        {this.props.players.length>1 &&
+          <div>
+            <input className="button" onClick={this.props.changeGameState} data-next-state="GAME" type="button" value="Start Game (first to 20)" />
+            <input className="button" onClick={this.props.changeGameState} data-next-state="GAME" type="button" value="Start Game (100 card play)" />
+          </div>
+        }
+        </div>
       </div>
     );
   }

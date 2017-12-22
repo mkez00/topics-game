@@ -2,21 +2,30 @@ import React, { Component } from 'react';
 
 class Symbol extends Component {
   render() {
-    return  <div>
+    return  <div className="Symbol">
               {this.props.symbol==0 &&
-                <p>@@@</p>
+                <span className="Symbol">@</span>
               }
               {this.props.symbol==1 &&
-                <p>###</p>
+                <span className="Symbol">#</span>
               }
               {this.props.symbol==2 &&
-                <p>!!!</p>
+                <span className="Symbol">!</span>
               }
               {this.props.symbol==3 &&
-                <p>$$$</p>
+                <span className="Symbol">$</span>
               }
               {this.props.symbol==4 &&
-                <p>+++</p>
+                <span className="Symbol">+</span>
+              }
+              {this.props.symbol==5 &&
+                <span className="Symbol">~</span>
+              }
+              {this.props.symbol==6 &&
+                <span className="Symbol">-</span>
+              }
+              {this.props.symbol==7 &&
+                <span className="Symbol">^</span>
               }
             </div>
   }

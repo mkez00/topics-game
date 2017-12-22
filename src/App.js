@@ -4,6 +4,7 @@ import './App.css';
 import GameSetup from './GameSetup.js';
 import GameBoard from './GameBoard.js';
 import GameSummary from './GameSummary.js';
+import Welcome from './Welcome.js';
 
 import {GameModel} from './model/DataModels.js';
 import {Player} from './model/DataModels.js';
@@ -72,6 +73,13 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+      <header className="App-header">
+        <h1 className="App-title">Topics Game</h1>
+      </header>
+        {this.state.gameModel.gameState=="WELCOME" &&
+          <Welcome
+            changeGameState={this.changeGameState} />
+        }
         {this.state.gameModel.gameState=="SETUP" &&
           <GameSetup players={this.state.gameModel.players}
             addPlayerHandler={this.addPlayerHandler}
@@ -87,7 +95,6 @@ class App extends Component {
         {this.state.gameModel.gameState=="SUMMARY" &&
           <GameSummary players={this.state.gameModel.players} changeGameState={this.changeGameState} />
         }
-        <input type="button" value="Display Model in Console" onClick={this.displayInConsole} />
       </div>
     );
   }

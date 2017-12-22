@@ -19,7 +19,7 @@ class GameSummary extends Component {
 
     return (
       <div>
-        <p>The Game Summary table</p>
+        <p>Game Over!!!</p>
         <table className="Table">
           <thead>
             <tr>
@@ -31,8 +31,8 @@ class GameSummary extends Component {
             {playerRows}
           </tbody>
         </table>
-        <input onClick={this.props.changeGameState} data-next-state="SETUP" type="button" value="New Game" />
-        <input onClick={this.props.changeGameState} data-next-state="GAME" type="button" value="Restart Game" />
+        <input className="button" onClick={this.props.changeGameState} data-next-state="SETUP" type="button" value="New Game" />
+        <input className="button" onClick={this.props.changeGameState} data-next-state="GAME" type="button" value="Restart Game" />
       </div>
     );
   }

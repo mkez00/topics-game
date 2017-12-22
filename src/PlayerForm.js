@@ -11,7 +11,7 @@ class PlayerForm extends Component {
         </td>
         <td>
         {this.props.playerList[this.props.playerList.length-1].key==this.props.player.key &&
-          <input type="button" onClick={this.props.deletePlayerHandler} data-key={this.props.player.key} value='Delete'/>
+          <input className="button button-small" type="button" onClick={this.props.deletePlayerHandler} data-key={this.props.player.key} value='Delete'/>
         }
         </td>
       </tr>
