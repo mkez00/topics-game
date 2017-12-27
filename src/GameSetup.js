@@ -7,7 +7,14 @@ class GameSetup extends Component {
 
   constructor(props){
     super(props);
+    this.changeGameState = this.changeGameState.bind(this);
+  }
 
+  changeGameState(event){
+    var newGameState = event.target.attributes.getNamedItem('data-next-state').value
+    var gameMode = parseInt(event.target.attributes.getNamedItem('data-game-mode').value)
+    this.props.changeGameMode(gameMode)
+    this.props.changeGameState(newGameState)
   }
 
   render() {
@@ -35,8 +42,8 @@ class GameSetup extends Component {
         }
         {this.props.players.length>1 &&
           <div>
-            <input className="button" onClick={this.props.changeGameState} data-next-state="GAME" type="button" value="Start Game (first to 20)" />
-            <input className="button" onClick={this.props.changeGameState} data-next-state="GAME" type="button" value="Start Game (100 card play)" />
+            <input className="button" onClick={this.changeGameState} data-game-mode="5" data-next-state="GAME" type="button" value="Start Game (first to 5)" />
+            <input className="button" onClick={this.changeGameState} data-game-mode="20" data-next-state="GAME" type="button" value="Start Game (first to 20)" />
           </div>
         }
         </div>

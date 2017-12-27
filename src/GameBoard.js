@@ -33,7 +33,6 @@ class GameBoard extends Component {
     this.fetchNextCard = this.fetchNextCard.bind(this);
     this.calculateNextTurn = this.calculateNextTurn.bind(this);
     this.collectCard = this.collectCard.bind(this);
-    this.incrementCorrectCount = props.incrementCorrectCount.bind(this);
     this.pauseGame = this.pauseGame.bind(this);
   }
 
@@ -66,6 +65,7 @@ class GameBoard extends Component {
     var deck = this.state.game.fullDeck;
 
     if (deck.length==0){
+      this.props.changeGameState("SUMMARY")
       return;
     }
 
@@ -123,11 +123,10 @@ class GameBoard extends Component {
 
   collectCard(event){
     var game = this.state.game;
-
-    this.pauseGame()
-
     var faceOffList = this.getFaceOff(game.gamePlayers)
+
     if (faceOffList.length>0){
+      this.pauseGame()
       var keyLoser = event.target.attributes.getNamedItem('data-key').value; //key of player losing cardDeck
       var keyWinner = null
       faceOffList.map((gamePlayer)=>{
@@ -146,7 +145,7 @@ class GameBoard extends Component {
       })
 
       // increment correct count for player
-      this.incrementCorrectCount(keyWinner)
+      this.props.incrementCorrectCount(keyWinner)
 
       game.gamePlayers = gamePlayers;
       this.setState({game: game});

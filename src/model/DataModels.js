@@ -1,6 +1,7 @@
 export function GameModel() {
   this.players = [];
   this.gameState = "WELCOME";
+  this.gameMode = 5;
 }
 
 export function Player(){

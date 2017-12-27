@@ -20,12 +20,27 @@ class App extends Component {
     this.playerNameChange = this.playerNameChange.bind(this);
     this.displayInConsole = this.displayInConsole.bind(this);
     this.incrementCorrectCount = this.incrementCorrectCount.bind(this);
+    this.changeGameMode = this.changeGameMode.bind(this);
   }
 
-  changeGameState(event) {
-    var newGameState = event.target.attributes.getNamedItem('data-next-state').value
+  changeGameState(newGameState) {
+    // var newGameState = event.target.attributes.getNamedItem('data-next-state').value
     var gameModel = this.state.gameModel;
     gameModel.gameState = newGameState;
+    // clear player counts
+    if (newGameState=="GAME" || newGameState=="SETUP"){
+      var players = gameModel.players.map((player)=>{
+        player.correct = 0
+        return player
+      })
+      gameModel.players = players
+    }
+    this.setState(gameModel: gameModel);
+  }
+
+  changeGameMode(gameMode){
+    var gameModel = this.state.gameModel;
+    gameModel.gameMode = gameMode
     this.setState(gameModel: gameModel);
   }
 
@@ -62,8 +77,22 @@ class App extends Component {
       var newCorrect = player.correct + 1;
       return {...player, correct: newCorrect};
     })
+    this.calculateEndGame(players,gameModel.gameMode)
     gameModel.players=players;
     this.setState({gameModel: gameModel});
+  }
+
+  calculateEndGame(players,gameMode){
+    var gameEnd = false
+    players.map((player)=>{
+      if (player.correct==gameMode){
+        gameEnd=true
+      }
+    })
+
+    if (gameEnd){
+      this.changeGameState("SUMMARY")
+    }
   }
 
   displayInConsole(){
@@ -85,10 +114,13 @@ class App extends Component {
             addPlayerHandler={this.addPlayerHandler}
             deletePlayerHandler={this.deletePlayerHandler}
             playerNameChange={this.playerNameChange}
-            changeGameState={this.changeGameState} />
+            changeGameState={this.changeGameState}
+            changeGameMode={this.changeGameMode} />
         }
         {this.state.gameModel.gameState=="GAME" &&
-          <GameBoard players={this.state.gameModel.players}
+          <GameBoard
+            gameMode={this.state.gameModel.gameMode}
+            players={this.state.gameModel.players}
             incrementCorrectCount={this.incrementCorrectCount}
             changeGameState={this.changeGameState} />
         }
