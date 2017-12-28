@@ -43,6 +43,8 @@ class GameSetup extends Component {
         {this.props.players.length>1 &&
           <div>
             <input className="button" onClick={this.changeGameState} data-game-mode="5" data-next-state="GAME" type="button" value="Start Game (first to 5)" />
+            <input className="button" onClick={this.changeGameState} data-game-mode="10" data-next-state="GAME" type="button" value="Start Game (first to 10)" />
+            <input className="button" onClick={this.changeGameState} data-game-mode="15" data-next-state="GAME" type="button" value="Start Game (first to 15)" />
             <input className="button" onClick={this.changeGameState} data-game-mode="20" data-next-state="GAME" type="button" value="Start Game (first to 20)" />
           </div>
         }
