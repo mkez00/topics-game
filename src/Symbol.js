@@ -25,7 +25,19 @@ class Symbol extends Component {
                 <span className="Symbol">-</span>
               }
               {this.props.symbol==7 &&
-                <span className="Symbol">^</span>
+                <span className="Symbol">:</span>
+              }
+              {this.props.symbol==8 &&
+                <span className="Symbol">%</span>
+              }
+              {this.props.symbol==9 &&
+                <span className="Symbol">=</span>
+              }
+              {this.props.symbol==10 &&
+                <span className="Symbol">X</span>
+              }
+              {this.props.symbol==11 &&
+                <span className="Symbol">O</span>
               }
             </div>
   }

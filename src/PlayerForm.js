@@ -7,7 +7,7 @@ class PlayerForm extends Component {
       <tr>
         <td>Player {this.props.player.key}</td>
         <td>
-          <input type="text" value={this.props.player.name} data-key={this.props.player.key} onChange={this.props.playerNameChange} />
+          <input type="text" maxLength="10" value={this.props.player.name} data-key={this.props.player.key} onChange={this.props.playerNameChange} />
         </td>
         <td>
         {this.props.playerList[this.props.playerList.length-1].key==this.props.player.key &&
