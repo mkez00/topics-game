@@ -88,7 +88,7 @@ class GameBoard extends Component {
       //setup card for players deck
       var card = new Card();
       card.topic = randomCard;
-      card.symbol = Math.floor(Math.random() * game.gamePlayers.length+6);
+      card.symbol = Math.floor(Math.random() * (game.gamePlayers.length*2));
 
       newDeck.push(card);
       return {...gamePlayer, cardDeck: newDeck};
